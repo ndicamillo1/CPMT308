@@ -121,16 +121,42 @@ Where priceUSD > (Select AVG(priceUSD)
 
 Select c.name, o.pid, o.dollars
 From Customers as c join Orders as o on c.cid = o.cid
-Order by o.dollars
+Order by o.dollars desc
 
 -- 14
 
+Select c.name, Coalesce(SUM(o.dollars),0)
+From Customers as c left outer join Orders as o on c.cid = o.cid
+Group By c.cid
+Order by c.name asc;
+
 -- 15
+
+Select c.name, p.name, a.name
+From Customers as c,
+     Agents as a,
+     Orders as o,
+     Products as p
+Where c.cid = o.cid
+  and p.pid = o.pid
+  and a.aid = o.aid
+  and a.city = 'New York';
 
 -- 16
 
+Select o.ordno, o.dollars, ((p.priceUSD * o.qty) - (c.discount / 100 ) * (p.priceUSD * o.qty))
+From Customers as c,
+     Orders as o,
+     Products as p
+Where o.cid = c.cid
+  and o.pid = p.pid
+Order By o.ordno asc;
+
 -- 17
 
+Update orders
+Set dollars = 2000
+Where dollars = 540
 
 
 
