@@ -70,13 +70,58 @@ From Customers as c join Agents as a on c.city = a.city
 
 -- 9
 
+Select c.name, c.city
+From Customers as c
+Where c.city in(
+	            Select p.city
+	            From Products as p
+	            Group by p.city
+	            Order by COUNT(p.city) asc
+	            Limit 1
+	            );
+
 -- 10
+
+Select c.name, c.city
+From Customers as c
+Where c.city in(
+		        Select p.city
+			    From Products as p
+				Group by p.city
+				Order By COUNT(p.city) desc
+				Limit 1
+				);
 
 -- 11
 
+Select c.name, c.city
+From Customers as c
+Where c.city in(
+		        Select p.city
+		        From Products as p
+		        Group By p.city
+		        Having COUNT(p.city) in(
+										Select COUNT(p.city)
+										From Products as p
+										Group By p.city
+										Order By COUNT(p.city)desc
+										Limit 1
+										)
+				);
+
 -- 12
 
+Select name
+From Products
+Where priceUSD > (Select AVG(priceUSD)
+                  From Products 
+                 );
+
 -- 13
+
+Select c.name, o.pid, o.dollars
+From Customers as c join Orders as o on c.cid = o.cid
+Order by o.dollars
 
 -- 14
 
